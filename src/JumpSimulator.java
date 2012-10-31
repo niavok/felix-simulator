@@ -18,7 +18,7 @@ public class JumpSimulator {
 
 		currentState = new JumpState(config.initialHeight, 0);
 		states.add(currentState);
-		while (currentState.height > 0) {
+		while (currentState.height > config.endHeight) {
 			currentState = step(currentState);
 			states.add(currentState);
 		}

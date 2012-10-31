@@ -61,5 +61,9 @@ public class JumpResult {
 	public double getStepTime(int stepIndex) {
 		return (stepIndex+1) * config.stepDuration;
 	}
+	
+	public JumpConfig getConfig() {
+		return config;
+	}
 
 }

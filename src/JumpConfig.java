@@ -6,6 +6,8 @@ public class JumpConfig {
 	public double mass;
 	public double dragCoefficient;
 	public double section;
+	public double endHeight;
+	public String name;
 	
 	/**
 	 * Jumper mass, in kilogram
@@ -37,5 +39,14 @@ public class JumpConfig {
 	
 	public void setSection(double section) {
 		this.section = section;
+	}
+
+	public void setJumpEndHeight(double endHeight) {
+		this.endHeight = endHeight;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+		
 	}
 }

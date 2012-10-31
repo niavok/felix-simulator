@@ -39,7 +39,7 @@ public class World {
 			p = presureTab[n] * Math.pow(1. + gradientTab[n] * heightDelta / temperatureTab[n], beta);
 		}
 
-		double density = p / nAvo / kBoltz / temperature;
+		double density = mair * p / nAvo / kBoltz / temperature;
 		return density;
 	}
 }
