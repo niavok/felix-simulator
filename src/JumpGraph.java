@@ -39,6 +39,7 @@ public class JumpGraph extends Component {
 	private int mouseY = 0;
 	private boolean mouseOnGraphics;
 	private Formatter formatter;
+	private double horizontalheightRatio;
 	
 	
 	public JumpGraph() {
@@ -129,6 +130,7 @@ public class JumpGraph extends Component {
 		maxHeight *= 1.05;
 		maxDuration *= 1.05;
 		maxSpeed  *= 1.05;
+				
 
 		double availableHeight = getSize().height - MARGIN_BOTTOM - MARGIN_TOP;
 		double availableWidth = getSize().width - MARGIN_LEFT - MARGIN_RIGHT;
@@ -136,6 +138,8 @@ public class JumpGraph extends Component {
 		heightRatio = availableHeight / maxHeight;
 		speedRatio = availableHeight / maxSpeed;
 		durationRatio = availableWidth / maxDuration;
+		
+		horizontalheightRatio = availableWidth / maxHeight;
 		
 		for (JumpResult jump : jumps) {
 			drawJump(jump);
@@ -152,10 +156,12 @@ public class JumpGraph extends Component {
 
 		GeneralPath heightPolyline = new GeneralPath(GeneralPath.WIND_NON_ZERO, jump.getStepCount());
 		GeneralPath speedPolyline = new GeneralPath(GeneralPath.WIND_NON_ZERO, jump.getStepCount());
+		GeneralPath speedPerHeightPolyline = new GeneralPath(GeneralPath.WIND_NON_ZERO, jump.getStepCount());
 
 		JumpState step = jump.getStep(0);
 		heightPolyline.moveTo(getTimeOffset(jump.getStepTime(0)), getHeightOffset(step.height));
 		speedPolyline.moveTo(getTimeOffset(jump.getStepTime(0)), getSpeedOffset(step.speed));
+		speedPerHeightPolyline.moveTo(getHorizontalHeightOffset(step.height), getSpeedOffset(step.speed));
 
 		int indexStep = (int) (1.0 /(jump.getConfig().stepDuration * durationRatio));
 		
@@ -163,6 +169,7 @@ public class JumpGraph extends Component {
 			step = jump.getStep(index);
 			heightPolyline.lineTo(getTimeOffset(jump.getStepTime(index)), getHeightOffset(step.height));
 			speedPolyline.lineTo(getTimeOffset(jump.getStepTime(index)), getSpeedOffset(step.speed));
+			speedPerHeightPolyline.lineTo(getHorizontalHeightOffset(step.height), getSpeedOffset(step.speed));
 		}
 
 		g2.setStroke(new BasicStroke(2f));
@@ -176,9 +183,14 @@ public class JumpGraph extends Component {
 		g2.setPaint(pickColor.brighter());
 		g2.draw(speedPolyline);
 		
+//		Color pickColor2 = pickColor();
+		g2.setPaint(pickColor.brighter().brighter());
+		g2.draw(speedPerHeightPolyline);
+		
 		g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_OFF);
 	}
 
+	
 	private Color pickColor() {
 
 		Queue<Color> colorQueue = new LinkedBlockingQueue<Color>();
@@ -201,6 +213,11 @@ public class JumpGraph extends Component {
 		return getSize().height - MARGIN_BOTTOM - heightRatio * height;
 	}
 
+	private double getHorizontalHeightOffset(double height) {
+		return  MARGIN_LEFT + horizontalheightRatio * height;
+	}
+
+	
 	private double getTimeOffset(double time) {
 		return MARGIN_LEFT + durationRatio * time;
 	}
